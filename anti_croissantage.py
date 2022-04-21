@@ -7,6 +7,7 @@ import face_recognition
 import cv2
 import numpy as np
 import timeit
+import platform
 import ctypes
 
 ERROR = "[ERROR] No image detected. Need to access to your camera!"
@@ -77,8 +78,10 @@ def find_my_face():
             end = timeit.default_timer()
 
             if end - start > 15:
-                os.popen("dbus-send --type=method_call --dest=org.gnome.ScreenSaver /org/gnome/ScreenSaver org.gnome.ScreenSaver.Lock")
-                #ctypes.windll.user32.LockWorkStation()
+                if platform.system() == "Linux":
+                    os.popen("dbus-send --type=method_call --dest=org.gnome.ScreenSaver /org/gnome/ScreenSaver org.gnome.ScreenSaver.Lock")
+                elif platform.system() == "Windows":
+                    ctypes.windll.user32.LockWorkStation()
 
         else:
             sys.exit(ERROR)
